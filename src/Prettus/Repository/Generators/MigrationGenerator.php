@@ -9,7 +9,6 @@ use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
 /**
  * Class MigrationGenerator
  * @package Prettus\Repository\Generators
- * @author Anderson Andrade <contato@andersonandra.de>
  */
 class MigrationGenerator extends Generator
 {
@@ -29,7 +28,7 @@ class MigrationGenerator extends Generator
      */
     public function getBasePath()
     {
-        return base_path() . '/database/migrations/';
+        return config('repository.generator.basePath', app()->path()). '/' . $this->getModule() . '/Database/Migrations/';
     }
 
 

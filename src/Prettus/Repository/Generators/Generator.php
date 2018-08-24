@@ -5,11 +5,6 @@ namespace Prettus\Repository\Generators;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Str;
 
-/**
- * Class Generator
- * @package Prettus\Repository\Generators
- * @author Anderson Andrade <contato@andersonandra.de>
- */
 abstract class Generator
 {
 
@@ -145,10 +140,27 @@ abstract class Generator
         return Str::studly(str_replace(' ', '/', ucwords(str_replace('/', ' ', $name))));
     }
 
+    /**
+     * Get module input.
+     *
+     * @return string
+     */
+    public function getModule()
+    {
+        $module = $this->module;
+        if (str_contains($this->module, '\\')) {
+            $module = str_replace('\\', '/', $this->module);
+        }
+        if (str_contains($this->module, '/')) {
+            $module = str_replace('/', '/', $this->module);
+        }
 
+        return Str::studly(str_replace(' ', '/', ucwords(str_replace('/', ' ', $module))));
+    }
+    
    /**
      * Get application namespace
-     *
+     * 
      * @return string
      */
     public function getAppNamespace()
@@ -156,7 +168,7 @@ abstract class Generator
         return \Illuminate\Container\Container::getInstance()->getNamespace();
     }
 
-
+    
     /**
      * Get class name.
      *
@@ -186,7 +198,7 @@ abstract class Generator
      */
     public function getRootNamespace()
     {
-        return config('repository.generator.rootNamespace', $this->getAppNamespace());
+        return config('repository.generator.rootNamespace', $this->getAppNamespace()). '\\' . $this->getModule() . '\\';
     }
 
 
@@ -236,7 +248,7 @@ abstract class Generator
         } else {
             $path = str_replace('/', '\\', $path);
         }
-
+        
 
         return $path;
     }

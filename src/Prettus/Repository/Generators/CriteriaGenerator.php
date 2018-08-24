@@ -5,7 +5,6 @@ namespace Prettus\Repository\Generators;
 /**
  * Class CriteriaGenerator
  * @package Prettus\Repository\Generators
- * @author Anderson Andrade <contato@andersonandra.de>
  */
 class CriteriaGenerator extends Generator
 {
@@ -52,6 +51,6 @@ class CriteriaGenerator extends Generator
      */
     public function getBasePath()
     {
-        return config('repository.generator.basePath', app()->path());
+        return config('repository.generator.basePath', app()->path()). '/' . $this->getModule();
     }
 }

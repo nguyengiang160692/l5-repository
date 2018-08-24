@@ -8,11 +8,6 @@ use Prettus\Repository\Generators\FileAlreadyExistsException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
-/**
- * Class ControllerCommand
- * @package Prettus\Repository\Generators\Commands
- * @author Anderson Andrade <contato@andersonandra.de>
- */
 class ControllerCommand extends Command
 {
 
@@ -65,17 +60,20 @@ class ControllerCommand extends Command
     {
         try {
             // Generate create request for controller
-            $this->call('make:request', [
-                'name' => $this->argument('name') . 'CreateRequest'
+            $this->call('module:make-request', [
+                'name' => $this->argument('name') . 'CreateRequest',
+                'module' => $this->argument('module'),
             ]);
 
             // Generate update request for controller
-            $this->call('make:request', [
-                'name' => $this->argument('name') . 'UpdateRequest'
+            $this->call('module:make-request', [
+                'name' => $this->argument('name') . 'UpdateRequest',
+                'module' => $this->argument('module'),
             ]);
 
             (new ControllerGenerator([
                 'name' => $this->argument('name'),
+                'module' => $this->argument('module'),
                 'force' => $this->option('force'),
             ]))->run();
 
@@ -101,6 +99,12 @@ class ControllerCommand extends Command
                 'name',
                 InputArgument::REQUIRED,
                 'The name of model for which the controller is being generated.',
+                null
+            ],
+            [
+                'module',
+                InputArgument::REQUIRED,
+                'The name of module.',
                 null
             ],
         ];

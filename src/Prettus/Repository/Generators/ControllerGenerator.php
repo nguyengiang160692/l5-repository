@@ -4,7 +4,6 @@ namespace Prettus\Repository\Generators;
 /**
  * Class ControllerGenerator
  * @package Prettus\Repository\Generators
- * @author Anderson Andrade <contato@andersonandra.de>
  */
 class ControllerGenerator extends Generator
 {
@@ -53,7 +52,7 @@ class ControllerGenerator extends Generator
      */
     public function getBasePath()
     {
-        return config('repository.generator.basePath', app()->path());
+        return config('repository.generator.basePath', app()->path()). '/' . $this->getModule();
     }
 
     /**
@@ -64,7 +63,7 @@ class ControllerGenerator extends Generator
     public function getControllerName()
     {
 
-        return ucfirst($this->getPluralName());
+        return ucfirst(lcfirst(ucwords($this->getClass())));
     }
 
     /**
@@ -92,7 +91,7 @@ class ControllerGenerator extends Generator
             'singular'   => $this->getSingularName(),
             'validator'  => $this->getValidator(),
             'repository' => $this->getRepository(),
-            'appname'    => $this->getAppNamespace(),
+            'appname'    => parent::getRootNamespace(),
         ]);
     }
 
@@ -115,6 +114,7 @@ class ControllerGenerator extends Generator
     {
         $validatorGenerator = new ValidatorGenerator([
             'name' => $this->name,
+            'module' => $this->module,
         ]);
 
         $validator = $validatorGenerator->getRootNamespace() . '\\' . $validatorGenerator->getName();
@@ -135,6 +135,7 @@ class ControllerGenerator extends Generator
     {
         $repositoryGenerator = new RepositoryInterfaceGenerator([
             'name' => $this->name,
+            'module' => $this->module,
         ]);
 
         $repository = $repositoryGenerator->getRootNamespace() . '\\' . $repositoryGenerator->getName();

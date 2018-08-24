@@ -9,11 +9,6 @@ use Prettus\Repository\Generators\FileAlreadyExistsException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
-/**
- * Class BindingsCommand
- * @package Prettus\Repository\Generators\Commands
- * @author Anderson Andrade <contato@andersonandra.de>
- */
 class BindingsCommand extends Command
 {
 
@@ -57,21 +52,22 @@ class BindingsCommand extends Command
     {
         try {
             $bindingGenerator = new BindingsGenerator([
-                'name' => $this->argument('name'),
-                'force' => $this->option('force'),
+                'name'   => $this->argument('name'),
+                'module' => $this->argument('module'),
+                'force'  => $this->option('force'),
             ]);
             // generate repository service provider
             if (!file_exists($bindingGenerator->getPath())) {
-                $this->call('make:provider', [
+                $this->call('module:make-provider', [
                     'name' => $bindingGenerator->getConfigGeneratorClassPath($bindingGenerator->getPathConfigNode()),
+                    'module' => $bindingGenerator->module,
                 ]);
-                // placeholder to mark the place in file where to prepend repository bindings
-                $provider = File::get($bindingGenerator->getPath());
-                File::put($bindingGenerator->getPath(), vsprintf(str_replace('//', '%s', $provider), [
-                    '//',
-                    $bindingGenerator->bindPlaceholder
-                ]));
             }
+            // placeholder to mark the place in file where to prepend repository bindings
+            $provider = File::get($bindingGenerator->getPath());
+            File::put($bindingGenerator->getPath(), vsprintf(str_replace('//', '%s', $provider), [
+                $bindingGenerator->bindPlaceholder
+            ]));
             $bindingGenerator->run();
             $this->info($this->type . ' created successfully.');
         } catch (FileAlreadyExistsException $e) {
@@ -94,6 +90,12 @@ class BindingsCommand extends Command
                 'name',
                 InputArgument::REQUIRED,
                 'The name of model for which the controller is being generated.',
+                null
+            ],
+            [
+                'module',
+                InputArgument::REQUIRED,
+                'The name of module.',
                 null
             ],
         ];

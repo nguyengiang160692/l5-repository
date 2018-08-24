@@ -8,10 +8,6 @@ use Prettus\Repository\Generators\ValidatorGenerator;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
-/**
- * Class ValidatorCommand
- * @package Prettus\Repository\Generators\Commands
- */
 class ValidatorCommand extends Command
 {
 
@@ -56,7 +52,8 @@ class ValidatorCommand extends Command
     {
         try {
             (new ValidatorGenerator([
-                'name' => $this->argument('name'),
+                'name'   => $this->argument('name'),
+                'module' => $this->argument('module'),
                 'rules' => $this->option('rules'),
                 'force' => $this->option('force'),
             ]))->run();
@@ -81,6 +78,12 @@ class ValidatorCommand extends Command
                 'name',
                 InputArgument::REQUIRED,
                 'The name of model for which the validator is being generated.',
+                null
+            ],
+            [
+                'module',
+                InputArgument::REQUIRED,
+                'The name of module.',
                 null
             ],
         ];

@@ -6,11 +6,6 @@ use Illuminate\Support\Collection;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
-/**
- * Class EntityCommand
- * @package Prettus\Repository\Generators\Commands
- * @author Anderson Andrade <contato@andersonandra.de>
- */
 class EntityCommand extends Command
 {
 
@@ -54,6 +49,7 @@ class EntityCommand extends Command
         if ($this->confirm('Would you like to create a Presenter? [y|N]')) {
             $this->call('make:presenter', [
                 'name'    => $this->argument('name'),
+                'module'  => $this->argument('module'),
                 '--force' => $this->option('force'),
             ]);
         }
@@ -66,6 +62,7 @@ class EntityCommand extends Command
         if ($validator == 'yes') {
             $this->call('make:validator', [
                 'name'    => $this->argument('name'),
+                'module'  => $this->argument('module'),
                 '--rules' => $this->option('rules'),
                 '--force' => $this->option('force'),
             ]);
@@ -74,7 +71,9 @@ class EntityCommand extends Command
         if ($this->confirm('Would you like to create a Controller? [y|N]')) {
 
             $resource_args = [
-                'name'    => $this->argument('name')
+                'name'    => $this->argument('name'),
+                'module'  => $this->argument('module'),
+                '--force' => 1,
             ];
 
             // Generate a controller resource
@@ -84,14 +83,17 @@ class EntityCommand extends Command
 
         $this->call('make:repository', [
             'name'        => $this->argument('name'),
+            'module'  => $this->argument('module'),
             '--fillable'  => $this->option('fillable'),
             '--rules'     => $this->option('rules'),
             '--validator' => $validator,
-            '--force'     => $this->option('force')
+            '--force'     => $this->option('force'),
+            '--skip-migration' => $this->option('skip-migration'),
         ]);
 
         $this->call('make:bindings', [
             'name'    => $this->argument('name'),
+            'module'  => $this->argument('module'),
             '--force' => $this->option('force')
         ]);
     }
@@ -109,6 +111,12 @@ class EntityCommand extends Command
                 'name',
                 InputArgument::REQUIRED,
                 'The name of class being generated.',
+                null
+            ],
+            [
+                'module',
+                InputArgument::REQUIRED,
+                'The name of module.',
                 null
             ],
         ];
@@ -150,7 +158,14 @@ class EntityCommand extends Command
                 InputOption::VALUE_NONE,
                 'Force the creation if file already exists.',
                 null
-            ]
+            ],
+            [
+                'skip-migration',
+                null,
+                InputOption::VALUE_NONE,
+                'Skip the creation of a migration file.',
+                null,
+            ],
         ];
     }
 }

@@ -4,8 +4,8 @@ namespace Prettus\Repository\Generators;
 /**
  * Class TransformerGenerator
  * @package Prettus\Repository\Generators
- * @author Anderson Andrade <contato@andersonandra.de>
  */
+
 class TransformerGenerator extends Generator
 {
     /**
@@ -52,7 +52,7 @@ class TransformerGenerator extends Generator
      */
     public function getBasePath()
     {
-        return config('repository.generator.basePath', app()->path());
+        return config('repository.generator.basePath', app()->path()). '/' . $this->getModule();
     }
 
     /**
@@ -63,7 +63,8 @@ class TransformerGenerator extends Generator
     public function getReplacements()
     {
         $modelGenerator = new ModelGenerator([
-            'name' => $this->name
+            'name' => $this->name,
+            'module' => $this->module,
         ]);
         $model = $modelGenerator->getRootNamespace() . '\\' . $modelGenerator->getName();
         $model = str_replace([

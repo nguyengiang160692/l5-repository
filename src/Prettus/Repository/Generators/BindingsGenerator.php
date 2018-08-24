@@ -4,7 +4,6 @@ namespace Prettus\Repository\Generators;
 /**
  * Class BindingsGenerator
  * @package Prettus\Repository\Generators
- * @author Anderson Andrade <contato@andersonandra.de>
  */
 class BindingsGenerator extends Generator
 {
@@ -50,7 +49,7 @@ class BindingsGenerator extends Generator
      */
     public function getBasePath()
     {
-        return config('repository.generator.basePath', app()->path());
+        return config('repository.generator.basePath', app()->path()). '/' . $this->getModule();
     }
 
     /**
@@ -72,6 +71,7 @@ class BindingsGenerator extends Generator
     {
         $repositoryGenerator = new RepositoryInterfaceGenerator([
             'name' => $this->name,
+            'module' => $this->module,
         ]);
 
         $repository = $repositoryGenerator->getRootNamespace() . '\\' . $repositoryGenerator->getName();
@@ -91,6 +91,7 @@ class BindingsGenerator extends Generator
     {
         $repositoryGenerator = new RepositoryEloquentGenerator([
             'name' => $this->name,
+            'module' => $this->module,
         ]);
 
         $repository = $repositoryGenerator->getRootNamespace() . '\\' . $repositoryGenerator->getName();

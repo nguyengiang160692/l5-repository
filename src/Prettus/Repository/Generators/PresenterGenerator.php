@@ -4,8 +4,8 @@ namespace Prettus\Repository\Generators;
 /**
  * Class PresenterGenerator
  * @package Prettus\Repository\Generators
- * @author Anderson Andrade <contato@andersonandra.de>
  */
+
 class PresenterGenerator extends Generator
 {
     /**
@@ -43,14 +43,14 @@ class PresenterGenerator extends Generator
     public function getReplacements()
     {
         $transformerGenerator = new TransformerGenerator([
-            'name' => $this->name
+            'name' => $this->name,
+            'module' => $this->module,
         ]);
         $transformer = $transformerGenerator->getRootNamespace() . '\\' . $transformerGenerator->getName() . 'Transformer';
         $transformer = str_replace([
             "\\",
             '/'
         ], '\\', $transformer);
-        echo $transformer;
 
         return array_merge(parent::getReplacements(), [
             'transformer' => $transformer
@@ -74,6 +74,6 @@ class PresenterGenerator extends Generator
      */
     public function getBasePath()
     {
-        return config('repository.generator.basePath', app()->path());
+        return config('repository.generator.basePath', app()->path()). '/' . $this->getModule();
     }
 }

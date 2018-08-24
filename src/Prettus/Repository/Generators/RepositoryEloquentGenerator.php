@@ -6,7 +6,6 @@ use Prettus\Repository\Generators\Migrations\SchemaParser;
 /**
  * Class RepositoryEloquentGenerator
  * @package Prettus\Repository\Generators
- * @author Anderson Andrade <contato@andersonandra.de>
  */
 class RepositoryEloquentGenerator extends Generator
 {
@@ -55,7 +54,7 @@ class RepositoryEloquentGenerator extends Generator
      */
     public function getBasePath()
     {
-        return config('repository.generator.basePath', app()->path());
+        return config('repository.generator.basePath', app()->path()). '/' . $this->getModule();
     }
 
     /**
@@ -111,6 +110,9 @@ class RepositoryEloquentGenerator extends Generator
 
     public function getValidatorUse()
     {
+        if ($this->validator != 'yes') {
+            return '';
+        }
         $validator = $this->getValidator();
 
         return "use {$validator};";
@@ -120,9 +122,10 @@ class RepositoryEloquentGenerator extends Generator
     public function getValidator()
     {
         $validatorGenerator = new ValidatorGenerator([
-            'name'  => $this->name,
-            'rules' => $this->rules,
-            'force' => $this->force,
+            'name'   => $this->name,
+            'module' => $this->module,
+            'rules'  => $this->rules,
+            'force'  => $this->force,
         ]);
 
         $validator = $validatorGenerator->getRootNamespace() . '\\' . $validatorGenerator->getName();

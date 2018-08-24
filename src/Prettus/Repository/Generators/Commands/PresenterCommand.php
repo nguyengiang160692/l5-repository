@@ -8,11 +8,6 @@ use Prettus\Repository\Generators\TransformerGenerator;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
-/**
- * Class PresenterCommand
- * @package Prettus\Repository\Generators\Commands
- * @author Anderson Andrade <contato@andersonandra.de>
- */
 class PresenterCommand extends Command
 {
 
@@ -57,16 +52,18 @@ class PresenterCommand extends Command
 
         try {
             (new PresenterGenerator([
-                'name'  => $this->argument('name'),
-                'force' => $this->option('force'),
+                'name'   => $this->argument('name'),
+                'module' => $this->argument('module'),
+                'force'  => $this->option('force'),
             ]))->run();
             $this->info("Presenter created successfully.");
 
             if (!\File::exists(app()->path() . '/Transformers/' . $this->argument('name') . 'Transformer.php')) {
                 if ($this->confirm('Would you like to create a Transformer? [y|N]')) {
                     (new TransformerGenerator([
-                        'name'  => $this->argument('name'),
-                        'force' => $this->option('force'),
+                        'name'   => $this->argument('name'),
+                        'module' => $this->argument('module'),
+                        'force'  => $this->option('force'),
                     ]))->run();
                     $this->info("Transformer created successfully.");
                 }
@@ -91,6 +88,12 @@ class PresenterCommand extends Command
                 'name',
                 InputArgument::REQUIRED,
                 'The name of model for which the presenter is being generated.',
+                null
+            ],
+            [
+                'module',
+                InputArgument::REQUIRED,
+                'The name of module.',
                 null
             ],
         ];

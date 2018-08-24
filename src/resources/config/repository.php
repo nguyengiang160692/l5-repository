@@ -226,9 +226,9 @@ return [
     |
     */
     'generator'  => [
-        'basePath'      => app()->path(),
-        'rootNamespace' => 'App\\',
-        'stubsOverridePath' => app()->path(),
+	    'basePath'      => base_path('Modules'),
+	    'rootNamespace' => 'Modules',
+	    'stubsOverridePath' => base_path('Modules'),
         'paths'         => [
             'models'       => 'Entities',
             'repositories' => 'Repositories',

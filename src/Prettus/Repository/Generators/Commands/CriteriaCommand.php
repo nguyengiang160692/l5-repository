@@ -8,11 +8,6 @@ use Prettus\Repository\Generators\FileAlreadyExistsException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
-/**
- * Class CriteriaCommand
- * @package Prettus\Repository\Generators\Commands
- * @author Anderson Andrade <contato@andersonandra.de>
- */
 class CriteriaCommand extends Command
 {
     /**
@@ -56,6 +51,7 @@ class CriteriaCommand extends Command
         try {
             (new CriteriaGenerator([
                 'name' => $this->argument('name'),
+                'module' => $this->argument('module'),
                 'force' => $this->option('force'),
             ]))->run();
 
@@ -78,6 +74,12 @@ class CriteriaCommand extends Command
                 'name',
                 InputArgument::REQUIRED,
                 'The name of class being generated.',
+                null
+            ],
+            [
+                'module',
+                InputArgument::REQUIRED,
+                'The name of module.',
                 null
             ],
         ];

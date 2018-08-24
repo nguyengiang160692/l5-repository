@@ -11,11 +11,6 @@ use Prettus\Repository\Generators\RepositoryInterfaceGenerator;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
-/**
- * Class RepositoryCommand
- * @package Prettus\Repository\Generators\Commands
- * @author Anderson Andrade <contato@andersonandra.de>
- */
 class RepositoryCommand extends Command
 {
 
@@ -66,7 +61,8 @@ class RepositoryCommand extends Command
         $this->generators = new Collection();
 
         $migrationGenerator = new MigrationGenerator([
-            'name'   => 'create_' . snake_case(str_plural($this->argument('name'))) . '_table',
+            'name'   => 'create_' . snake_case($this->argument('name')) . '_table',
+            'module' => $this->argument('module'),
             'fields' => $this->option('fillable'),
             'force'  => $this->option('force'),
         ]);
@@ -77,6 +73,7 @@ class RepositoryCommand extends Command
 
         $modelGenerator = new ModelGenerator([
             'name'     => $this->argument('name'),
+            'module'   => $this->argument('module'),
             'fillable' => $this->option('fillable'),
             'force'    => $this->option('force')
         ]);
@@ -87,11 +84,18 @@ class RepositoryCommand extends Command
 
         $this->generators->push(new RepositoryInterfaceGenerator([
             'name'  => $this->argument('name'),
+            'module'   => $this->argument('module'),
             'force' => $this->option('force'),
         ]));
 
         foreach ($this->generators as $generator) {
-            $generator->run();
+            try {
+                $generator->run();
+            } catch (FileAlreadyExistsException $e) {
+                $this->error($this->type . ' already exists!');
+
+                return false;
+            }
         }
 
         $model = $modelGenerator->getRootNamespace() . '\\' . $modelGenerator->getName();
@@ -103,6 +107,7 @@ class RepositoryCommand extends Command
         try {
             (new RepositoryEloquentGenerator([
                 'name'      => $this->argument('name'),
+                'module'   => $this->argument('module'),
                 'rules'     => $this->option('rules'),
                 'validator' => $this->option('validator'),
                 'force'     => $this->option('force'),
@@ -129,6 +134,12 @@ class RepositoryCommand extends Command
                 'name',
                 InputArgument::REQUIRED,
                 'The name of class being generated.',
+                null
+            ],
+            [
+                'module',
+                InputArgument::REQUIRED,
+                'The name of module.',
                 null
             ],
         ];
